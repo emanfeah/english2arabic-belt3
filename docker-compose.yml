@@ -4,6 +4,8 @@ services:
     build:
       context: ./web
     command: node index.js
+    environment:
+     - API_ENDPOINT=API_URL=http://api:3001/data
     volumes:
      - ./web:/app
     ports:
@@ -16,7 +18,7 @@ services:
 
   api:
     build:
-      context: "API_URL=http://api:3001/data" 
+      context: ./api
     command: node index.js
     environment: 
     - CONNECTION_STRING=postgres://demo_user:demo_user@db/demo_db
@@ -46,6 +48,6 @@ volumes:
 
 networks:
   public-network: 
-   - driver: bridge 
+  #  - driver: bridge 
   private-network:
-  - driver: bridge 
+  # - driver: bridge 
