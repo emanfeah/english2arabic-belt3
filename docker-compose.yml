@@ -16,10 +16,10 @@ services:
 
   api:
     build:
-      context: ./api
+      context: "API_URL=http://api:3001/data" 
     command: node index.js
     environment: 
-    - ENV CONNECTON_STRING=./db
+    - CONNECTION_STRING=postgres://demo_user:demo_user@db/demo_db
     ports:
       - "3001:80"
     networks:
@@ -45,5 +45,7 @@ volumes:
   db-data:
 
 networks:
-  public-network:
+  public-network: 
+   - driver: bridge 
   private-network:
+  - driver: bridge 
