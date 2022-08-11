@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+  web:
+    build:
+      context: ./web
+    command: nodemon index.js
+    volumes:
+     - ./web:/app
+    ports:
+      - "80:3000"
+    networks:
+      - public-network
+      - private-network
+    depends_on:
+     - db
+
+  api:
+    build:
+      context: ./api
+    command: nodemon index.js
+    networks:
+      - private-network
+    depends_on:
+     - db
+
+  db:
+    image: postgres:11.2-alpine
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./sql_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432"
+    networks:
+      - private-network
+
+volumes:
+  db-data:
+
+networks:
+  public-network:
+  private-network:
