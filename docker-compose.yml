@@ -5,27 +5,27 @@ services:
       context: ./web
     command: node index.js
     environment:
-     - API_ENDPOINT=API_URL=http://api:3001/data
+     - API_URL=http://api:3001/data
     volumes:
      - ./web:/app
     ports:
       - "80:3000"
     networks:
       - public-network
-      - private-network
     depends_on:
-     - db
+     - api
 
   api:
     build:
       context: ./api
     command: node index.js
     environment: 
-    - CONNECTION_STRING=postgres://demo_user:demo_user@db/demo_db
+    - CONNECTION_STRING=postgres://postgres:postgres@db/postgres_db
     ports:
-      - "3001:80"
+      - "3001:3001"
     networks:
       - private-network
+      - public-network
     depends_on:
      - db
 
@@ -34,12 +34,10 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres_db"
     volumes:
-      - db-data:/var/lib/postgresql/data
-      # to intialize the sql data
-      - ./sql_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432"
+      - "/home/ubuntu/english2arabic-belt3/sql_scripts/:/docker-entrypoint-initdb.d"
+    ports: ["5432"]
     networks:
       - private-network
 
@@ -47,7 +45,8 @@ volumes:
   db-data:
 
 networks:
-  public-network: 
-  #  - driver: bridge 
+  public-network:
+   driver: bridge
+
   private-network:
-  # - driver: bridge 
+   driver: bridge
