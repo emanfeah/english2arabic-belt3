@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: ./web
-    command: nodemon index.js
+    command: node index.js
     volumes:
      - ./web:/app
     ports:
@@ -17,7 +17,7 @@ services:
   api:
     build:
       context: ./api
-    command: nodemon index.js
+    command: node index.js
     networks:
       - private-network
     depends_on:
@@ -30,6 +30,7 @@ services:
       POSTGRES_PASSWORD: "postgres"
     volumes:
       - db-data:/var/lib/postgresql/data
+      # to intialize the sql data
       - ./sql_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432"
